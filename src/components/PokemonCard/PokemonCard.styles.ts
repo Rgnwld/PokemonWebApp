@@ -86,11 +86,17 @@ export const TypeContainer = styled.div<{ composition?: string }>`
             case 'fighting':
                 return '#c03028';
 
+            case 'flying':
+                return '#B076F2';
+
             case 'psychic':
                 return '#f85888';
 
             case 'rock':
                 return '#b8a038';
+
+            case 'steel':
+                return '#BFBFD6';
 
             case 'ghost':
                 return '#705898';
