@@ -24,6 +24,7 @@ const UserPage: React.FC = () => {
     const username = localStorage.getItem('user');
     const [pokemonsId, setPokemonsId] = useState([]);
     const [pokemonArr, setPokemonArr] = useState<any[]>([]);
+    const [userSearch, setUserSearch] = useState<string>('');
 
     async function LoadPokemons() {
         let pokeArr: any[] = [];
@@ -57,7 +58,12 @@ const UserPage: React.FC = () => {
     return (
         <>
             <Modal_Component />
-            <Header />
+            <Header
+                onChangeSearchValue={(evt) => {
+                    setUserSearch(evt?.target?.value ?? '');
+                }}
+                searchValue={userSearch}
+            />
             <Body_Component>
                 <Sections>
                     <PokedexContainer>
@@ -70,50 +76,56 @@ const UserPage: React.FC = () => {
                                 <span style={{ justifyContent: 'center' }}>Ação</span>
                             </InfoTemplate>
                             {pokemonArr?.map((e) => {
-                                return (
-                                    <PIC>
-                                        <Img_PIC
-                                            src={
-                                                e?.sprites?.front_default ??
-                                                e?.sprites?.other['official-artwork'].front_default
-                                            }
-                                        />
-                                        <Name_PIC>{e?.name}</Name_PIC>
-                                        <Types_PIC>
-                                            {e?.types.map((e: any) => {
-                                                return <TypeContainer composition="2">{e?.type.name}</TypeContainer>;
-                                            })}
-                                        </Types_PIC>
-                                        <ButtonContainer>
-                                            <HoverButton onClick={() => openModal(e)} customColor="#49DBDF">
-                                                <HoverButtonIMG src={olhoIcon} />
-                                            </HoverButton>
-                                            <HoverButton
-                                                onClick={() => {
-                                                    if (window.confirm('Você deseja soltar este pokemon|?')) {
-                                                        let pokeIds = localStorage.getItem('pokeIds') ?? '';
-                                                        const pokeArr = localStorage.getItem('pokeIds');
+                                if (e?.name?.toLowerCase().includes(userSearch?.toLowerCase()))
+                                    return (
+                                        <PIC>
+                                            <Img_PIC
+                                                src={
+                                                    e?.sprites?.front_default ??
+                                                    e?.sprites?.other['official-artwork'].front_default
+                                                }
+                                            />
+                                            <Name_PIC>{e?.name}</Name_PIC>
+                                            <Types_PIC>
+                                                {e?.types.map((e: any) => {
+                                                    return (
+                                                        <TypeContainer composition="2">{e?.type.name}</TypeContainer>
+                                                    );
+                                                })}
+                                            </Types_PIC>
+                                            <ButtonContainer>
+                                                <HoverButton onClick={() => openModal(e)} customColor="#49DBDF">
+                                                    <HoverButtonIMG src={olhoIcon} />
+                                                </HoverButton>
+                                                <HoverButton
+                                                    onClick={() => {
+                                                        if (window.confirm('Você deseja soltar este pokemon|?')) {
+                                                            let pokeIds = localStorage.getItem('pokeIds') ?? '';
+                                                            const pokeArr = localStorage.getItem('pokeIds');
 
-                                                        let aux: string[] | undefined = pokeArr?.split(',');
+                                                            let aux: string[] | undefined = pokeArr?.split(',');
 
-                                                        let index: number = aux?.indexOf(e?.id.toString())!;
-                                                        if (index >= 0) {
-                                                            aux?.splice(index, 1);
+                                                            let index: number = aux?.indexOf(e?.id.toString())!;
+                                                            if (index >= 0) {
+                                                                aux?.splice(index, 1);
+                                                            }
+                                                            console.log(aux);
+                                                            let pokeString: string = aux?.join(',') ?? '';
+                                                            console.log(pokeString);
+                                                            localStorage.setItem('pokeIds', pokeString);
+                                                            OnStart();
                                                         }
-                                                        console.log(aux);
-                                                        let pokeString: string = aux?.join(',') ?? '';
-                                                        console.log(pokeString);
-                                                        localStorage.setItem('pokeIds', pokeString);
-                                                        OnStart();
-                                                    }
-                                                }}
-                                                customColor=" #f25d52"
-                                            >
-                                                <HoverButtonIMG style={{ transform: 'rotate(45deg)' }} src={plusIcon} />
-                                            </HoverButton>
-                                        </ButtonContainer>
-                                    </PIC>
-                                );
+                                                    }}
+                                                    customColor=" #f25d52"
+                                                >
+                                                    <HoverButtonIMG
+                                                        style={{ transform: 'rotate(45deg)' }}
+                                                        src={plusIcon}
+                                                    />
+                                                </HoverButton>
+                                            </ButtonContainer>
+                                        </PIC>
+                                    );
                             })}
                         </ListContainer>
                     </PokedexContainer>
