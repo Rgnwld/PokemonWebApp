@@ -6,3 +6,7 @@
 
 -   `npm i` - Instalação de pacotes necessários;
 -   `npm run start` - Inicializar o projeto;
+
+
+### Acesse a página:
+- https://rgnwld.github.io/PokemonWebApp/#/
